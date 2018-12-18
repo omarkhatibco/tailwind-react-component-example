@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 
 import { getClassNames } from '../utls/getClassNames';
 
-const Box = ({ children, justify,items, w, h, bg, text, font, type, className }) => {
+const Box = props => {
+	const { type, children } = props;
 	const Tag = type;
-	const background = getClassNames(bg, 'bg-');
-	const texts = getClassNames(text, 'text-');
-	const fonts = getClassNames(font, 'font-');
-	const classNames =`w-${w} ` +  `h-${h} ` +   'flex ' + `justify-${justify} ` + `items-${items} `   + background + texts + fonts + className;
-	return <Tag className={classNames}>{children}</Tag>;
+
+	const className = getClassNames(props);
+	return <Tag className={className}>{children}</Tag>;
 };
 
 Box.propTypes = {
@@ -24,7 +23,7 @@ Box.propTypes = {
 	children: PropTypes.any
 };
 
-Box.defaultProps = {	
+Box.defaultProps = {
 	justify: 'start',
 	items: 'start',
 	w: 'auto',

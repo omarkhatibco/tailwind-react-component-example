@@ -24633,7 +24633,62 @@ if ("development" !== 'production') {
   // http://fb.me/prop-types-in-prod
   module.exports = require('./factoryWithThrowingShims')();
 }
-},{"./factoryWithTypeCheckers":"node_modules/prop-types/factoryWithTypeCheckers.js"}],"utls/getClassNames.js":[function(require,module,exports) {
+},{"./factoryWithTypeCheckers":"node_modules/prop-types/factoryWithTypeCheckers.js"}],"node_modules/classnames/index.js":[function(require,module,exports) {
+var define;
+/*!
+  Copyright (c) 2017 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+/* global define */
+
+(function () {
+	'use strict';
+
+	var hasOwn = {}.hasOwnProperty;
+
+	function classNames () {
+		var classes = [];
+
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (!arg) continue;
+
+			var argType = typeof arg;
+
+			if (argType === 'string' || argType === 'number') {
+				classes.push(arg);
+			} else if (Array.isArray(arg) && arg.length) {
+				var inner = classNames.apply(null, arg);
+				if (inner) {
+					classes.push(inner);
+				}
+			} else if (argType === 'object') {
+				for (var key in arg) {
+					if (hasOwn.call(arg, key) && arg[key]) {
+						classes.push(key);
+					}
+				}
+			}
+		}
+
+		return classes.join(' ');
+	}
+
+	if (typeof module !== 'undefined' && module.exports) {
+		classNames.default = classNames;
+		module.exports = classNames;
+	} else if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
+		// register as 'classnames', consistent with npm package name
+		define('classnames', [], function () {
+			return classNames;
+		});
+	} else {
+		window.classNames = classNames;
+	}
+}());
+
+},{}],"utls/getClassNames.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24641,22 +24696,81 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getClassNames = void 0;
 
-var getClassNames = function getClassNames(list, prefix) {
-  var str = '';
-  list.forEach(function (item) {
-    var string = item.split(':');
+var _classnames = _interopRequireDefault(require("classnames"));
 
-    if (string.length === 2) {
-      str += string[0] + ':' + prefix + string[1] + ' ';
-    } else {
-      str += prefix + item + ' ';
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+var getClassNames = function getClassNames(reactProps) {
+  var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : ':';
+  var TailwindStaticClasses = ['container', 'clearfix', 'listReset', 'italic', 'roman', 'uppercase', 'lowercase', 'capitalize', 'normalCase', 'underline', 'lineThrough', 'noUnderline', 'antialiased', 'subpixelAntialiased', 'truncate'];
+  var TailwindSpecialClasses = ['display', 'position', 'visibility'];
+  var TailwindClasses = ['float', 'overflow', 'scrolling', 'pin', 'z', 'text', 'font', 'tracking', 'leading', 'align', 'whitespace', 'break', 'bg', 'border', 'rounded', 'flex', 'items', 'content', 'self', 'justify', 'p', 'px', 'py', 'pt', 'pr', 'pb', 'pl', 'm', 'mx', 'my', 'mt', 'mr', 'mb', 'ml', 'nm', 'nmx', 'nmy', 'nmt', 'nmr', 'nmb', 'nml', 'w', 'min-w', 'max-w', 'h', 'min-h', 'max-h', 'table', 'cursor', 'pointer-events', 'resize', 'select', 'appearance', 'shadow', 'object', 'opacity', 'outline', 'fill', 'stroke'];
+  var classNamesArray = Object.keys(reactProps).map(function (key) {
+    var value = reactProps[key];
+
+    var type = _typeof(reactProps[key]);
+
+    if (TailwindStaticClasses.includes(key)) {
+      if (type === 'boolean') {
+        return "".concat(key);
+      }
+
+      if (type === 'string') {
+        return "".concat(value).concat(prefix).concat(key);
+      }
+
+      if (type === 'object') {
+        return Array.isArray(value) && value.map(function (val) {
+          return "".concat(val).concat(prefix).concat(key);
+        });
+      }
+    }
+
+    if (TailwindSpecialClasses.includes(key)) {
+      if (type === 'string') {
+        return value;
+      }
+
+      if (type === 'object') {
+        return Array.isArray(value) && value.map(function (val) {
+          var str = val.split(prefix);
+          return str.length === 2 ? "".concat(str[0]).concat(prefix).concat(str[1]) : "".concat(str);
+        });
+      }
+    }
+
+    if (TailwindClasses.includes(key)) {
+      console.log(key.includes('nm'));
+      var editedKey = key.includes('nm') ? key.replace('n', '-') : key;
+
+      if (type === 'boolean') {
+        return "".concat(editedKey);
+      }
+
+      if (type === 'string') {
+        return "".concat(editedKey, "-").concat(value);
+      }
+
+      if (type === 'object') {
+        return Array.isArray(value) && value.map(function (val) {
+          if (val === editedKey) {
+            return key;
+          }
+
+          var str = val.split(prefix);
+          return str.length === 2 ? "".concat(str[0]).concat(prefix).concat(editedKey, "-").concat(str[1]) : "".concat(editedKey, "-").concat(str);
+        });
+      }
     }
   });
-  return str;
+  var className = reactProps.className;
+  return (0, _classnames.default)(classNamesArray, className);
 };
 
 exports.getClassNames = getClassNames;
-},{}],"Components/Box.js":[function(require,module,exports) {
+},{"classnames":"node_modules/classnames/index.js"}],"Components/Box.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24672,24 +24786,13 @@ var _getClassNames = require("../utls/getClassNames");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Box = function Box(_ref) {
-  var children = _ref.children,
-      justify = _ref.justify,
-      items = _ref.items,
-      w = _ref.w,
-      h = _ref.h,
-      bg = _ref.bg,
-      text = _ref.text,
-      font = _ref.font,
-      type = _ref.type,
-      className = _ref.className;
+var Box = function Box(props) {
+  var type = props.type,
+      children = props.children;
   var Tag = type;
-  var background = (0, _getClassNames.getClassNames)(bg, 'bg-');
-  var texts = (0, _getClassNames.getClassNames)(text, 'text-');
-  var fonts = (0, _getClassNames.getClassNames)(font, 'font-');
-  var classNames = "w-".concat(w, " ") + "h-".concat(h, " ") + 'flex ' + "justify-".concat(justify, " ") + "items-".concat(items, " ") + background + texts + fonts + className;
+  var className = (0, _getClassNames.getClassNames)(props);
   return _react.default.createElement(Tag, {
-    className: classNames
+    className: className
   }, children);
 };
 
@@ -24765,15 +24868,17 @@ function (_Component) {
     key: "render",
     value: function render() {
       return _react.default.createElement(_Box.default, {
-        w: "1/2",
+        w: ['full', 'md:1/2'],
+        nmt: ['12', 'md:6'],
+        display: ['flex', 'md:inline-flex'],
         h: "full",
-        justify: "center",
-        items: "center",
         type: "header",
         bg: ['orange-darkest', 'md:orange'],
         text: ['5xl', 'red'],
         font: ['serif', 'bold'],
-        className: "uppercase"
+        underline: true,
+        container: ['md', 'lg'],
+        className: "omar"
       }, _react.default.createElement("p", null, "hello"));
     }
   }]);
@@ -24822,7 +24927,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49557" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53140" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
