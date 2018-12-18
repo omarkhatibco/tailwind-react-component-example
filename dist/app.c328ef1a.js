@@ -24797,13 +24797,6 @@ var Box = function Box(props) {
 };
 
 Box.propTypes = {
-  justify: _propTypes.default.string,
-  items: _propTypes.default.string,
-  w: _propTypes.default.string,
-  h: _propTypes.default.string,
-  bg: _propTypes.default.arrayOf(_propTypes.default.string),
-  text: _propTypes.default.arrayOf(_propTypes.default.string),
-  font: _propTypes.default.arrayOf(_propTypes.default.string),
   type: _propTypes.default.oneOf(['article', 'footer', 'header', 'nav', 'div', 'section']),
   children: _propTypes.default.any
 };
@@ -24815,6 +24808,7 @@ Box.defaultProps = {
   bg: ['primary'],
   text: ['white'],
   font: ['normal'],
+  display: ['flex'],
   type: 'div'
 };
 var _default = Box;
@@ -24878,7 +24872,7 @@ function (_Component) {
         font: ['serif', 'bold'],
         underline: true,
         container: ['md', 'lg'],
-        className: "omar"
+        className: "my-custom-class-name omar-clss-name"
       }, _react.default.createElement("p", null, "hello"));
     }
   }]);

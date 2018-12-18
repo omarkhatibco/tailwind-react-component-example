@@ -12,13 +12,6 @@ const Box = props => {
 };
 
 Box.propTypes = {
-	justify: PropTypes.string,
-	items: PropTypes.string,
-	w: PropTypes.string,
-	h: PropTypes.string,
-	bg: PropTypes.arrayOf(PropTypes.string),
-	text: PropTypes.arrayOf(PropTypes.string),
-	font: PropTypes.arrayOf(PropTypes.string),
 	type: PropTypes.oneOf(['article', 'footer', 'header', 'nav', 'div', 'section']),
 	children: PropTypes.any
 };
@@ -31,6 +24,7 @@ Box.defaultProps = {
 	bg: ['primary'],
 	text: ['white'],
 	font: ['normal'],
+	display: ['flex'],
 	type: 'div'
 };
 

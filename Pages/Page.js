@@ -16,7 +16,7 @@ class Page extends Component {
 				font={['serif', 'bold']}
 				underline
 				container={['md', 'lg']}
-				className="omar"
+				className="my-custom-class-name omar-clss-name"
 			>
 				<p>hello</p>
 			</Box>
